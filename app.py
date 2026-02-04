@@ -37,7 +37,7 @@ st.markdown("""
 # 1. 데이터 로드
 @st.cache_data
 def load_local_data():
-    df = pd.read_csv('./final_dataset_efficiency_rank.csv')
+    df = pd.read_csv('./results/final_dataset_efficiency_rank.csv')
     return df
 
 try:
