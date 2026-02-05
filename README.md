@@ -1,4 +1,4 @@
-# 💰 주린이를 위한 실질 배당 수령액 분석 시뮬레이터
+# 💰 주린이를 위한 실질 배당 수령액 분석 시뮬레이터 [바로가기](https://dividend-analysis-project-singaseong96.streamlit.app/)
 > **배당률의 함정에서 벗어나, 내 투자금으로 실제로 받을 수 있는 현금을 확인하세요!**
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
