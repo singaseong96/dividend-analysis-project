@@ -8,11 +8,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug redirects
+      - name: Curl request
         run: |
           URL="https://dividend-analysis-project-singaseong96.streamlit.app/"
-          echo "== HEAD without -L =="
-          curl -sS -I "$URL" | sed -n '1,20p'
-          echo
-          echo "== Follow redirects (verbose) =="
-          curl -sS -L --max-redirs 20 -v -o /dev/null "$URL" 2>&1 | grep -E "< HTTP|< location:|> GET|> Host" | head -n 80
+          curl -sS -L --max-redirs 5 -A "Mozilla/5.0" -o /dev/null -w "%{http_code}\n" "$URL"
