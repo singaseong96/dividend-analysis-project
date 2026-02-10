@@ -1,0 +1,12 @@
+name: keep-streamlit-awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # 10분마다 실행
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl request
+        run: curl -L https://dividend-analysis-project-singaseong96.streamlit.app/
