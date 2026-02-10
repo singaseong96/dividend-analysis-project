@@ -2,7 +2,7 @@ name: keep-streamlit-awake
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # 10분마다 실행
+    - cron: "*/5 * * * *"   # 5분마다 실행
 
 jobs:
   ping:
