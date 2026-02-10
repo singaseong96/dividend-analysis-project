@@ -9,7 +9,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping (no redirect)
+      - name: Ping Streamlit (HEAD)
         run: |
           URL="https://dividend-analysis-project-singaseong96.streamlit.app/"
-          curl -sS -I -A "Mozilla/5.0" "$URL"
+          curl -sS -I -A "Mozilla/5.0" "$URL" >/dev/null
