@@ -2,7 +2,7 @@ name: keep-streamlit-awake
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # 10분마다 실행
+    - cron: "*/10 * * * *"
 
 jobs:
   ping:
@@ -15,7 +15,4 @@ jobs:
           curl -sS -I "$URL" | sed -n '1,20p'
           echo
           echo "== Follow redirects (verbose) =="
-          curl -sS -L --max-redirs 20 -v -o /dev/null "$URL" 2>&1 | grep -E "< HTTP|< location:|> GET|> Host" | head -n 60
-
-
-
+          curl -sS -L --max-redirs 20 -v -o /dev/null "$URL" 2>&1 | grep -E "< HTTP|< location:|> GET|> Host" | head -n 80
