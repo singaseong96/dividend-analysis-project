@@ -12,4 +12,5 @@ jobs:
       - name: Ping Streamlit (HEAD)
         run: |
           URL="https://dividend-analysis-project-singaseong96.streamlit.app/"
-          curl -sS -I -A "Mozilla/5.0" "$URL" >/dev/null
+          echo "URL=$URL"
+          curl -sS -A "Mozilla/5.0" -o /dev/null -w "HTTP=%{http_code}\n" "$URL"
