@@ -17,3 +17,8 @@ jobs:
           echo "HTTP=$code"
           # keep-awake 목적이면 실패로 만들 필요 없어서 무조건 성공 처리
           exit 0
+
+      - name: Show headers (debug)
+        run: |
+          curl -sS -I -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36" "https://dividend-analysis-project-singaseong96.streamlit.app/" | sed -n '1,40p'
+
