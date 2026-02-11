@@ -9,13 +9,13 @@ jobs:
   wake:
     runs-on: ubuntu-latest
     steps:
-      - name: Try curl first
+      - name: Try curl first (HEAD only, no redirect loop)
         id: curl
         run: |
           URL="https://dividend-analysis-project-singaseong96.streamlit.app/"
           UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
 
-          code=$(curl -sS -L --max-redirs 5 \
+          code=$(curl -sS -I \
             -A "$UA" \
             -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
             -H "Accept-Language: en-US,en;q=0.9" \
