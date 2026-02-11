@@ -6,19 +6,52 @@ on:
     - cron: "*/15 * * * *"
 
 jobs:
-  ping:
+  wake:
     runs-on: ubuntu-latest
     steps:
-      - name: Wake Streamlit (stable)
+      - name: Try curl first
+        id: curl
         run: |
           URL="https://dividend-analysis-project-singaseong96.streamlit.app/"
-          echo "URL=$URL"
-          code=$(curl -sS -L --max-redirs 5 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" -H "Accept-Language: en-US,en;q=0.9" -H "Cache-Control: no-cache" -o /dev/null -w "%{http_code}" "$URL" || true)
+          UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
+
+          code=$(curl -sS -L --max-redirs 5 \
+            -A "$UA" \
+            -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Cache-Control: no-cache" \
+            -o /dev/null -w "%{http_code}" "$URL" || true)
+
           echo "HTTP=$code"
-          # keep-awake 목적이면 실패로 만들 필요 없어서 무조건 성공 처리
-          exit 0
+          echo "code=$code" >> $GITHUB_OUTPUT
 
-      - name: Show headers (debug)
+      - name: Setup Node (only if curl got 303)
+        if: steps.curl.outputs.code == '303'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Wake via Playwright (only if curl got 303)
+        if: steps.curl.outputs.code == '303'
         run: |
-          curl -sS -I -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36" "https://dividend-analysis-project-singaseong96.streamlit.app/" | sed -n '1,40p'
+          npm init -y >/dev/null 2>&1
+          npm i -D playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
 
+          node <<'NODE'
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const url = "https://dividend-analysis-project-singaseong96.streamlit.app/";
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+
+            const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            console.log("PLAYWRIGHT_STATUS=", resp ? resp.status() : "NO_RESPONSE");
+
+            // Streamlit이 완전히 뜰 시간을 조금 줌
+            await page.waitForTimeout(15000);
+
+            await browser.close();
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
